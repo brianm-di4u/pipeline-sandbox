@@ -1,0 +1,29 @@
+{
+  "template": "dev-pipeline",
+  "version": "0.1.0",
+  "pack": "generic",
+  "files": {
+    ".claude/hooks/format.mjs": "eb4e0d813a70aca58f3f95e842f2b952a6e7fbd0407eecea862e4898ea34adb6",
+    ".claude/hooks/guard.mjs": "3b279b6ad9ec554246144babe1c144908ba4b41ed9dca75b21bf963e3a1b4043",
+    ".claude/settings.json": "351f9b73aab77975e637bfcfdc8ff5293d040baaf92afd358fd819f63344201b",
+    ".gitattributes": "684ff954d7a11a292863ead531c849da66730076432ee4281074cace59716745",
+    ".github/dependabot.yml": "f636a3ecd6930fa9deb042374f5ca01eba3ed904cda78eb7c2eff76c08e93e95",
+    ".github/ISSUE_TEMPLATE/decision.yml": "75b802ce502b690e4c4c568a349147c7a2ea8cecf4d936980e64399bf843cb0a",
+    ".github/pull_request_template.md": "7ad4e2329e017dd4b8106c1f50657e9222a52da663f646307185324d4a70940f",
+    ".github/workflows/ci.yml": "13951c98226926f94707d109f9f5a5e906b6e5373034218eb138dcf4910f743b",
+    ".github/workflows/gate.yml": "b912b795105cbcab60a5a8613b3b7823e53287de2350035373e887370c6342ec",
+    ".pipeline/AUTONOMY.md": "e5a8273f1db0b1a34e1e2feaf4c71387c8672c1664f0e2b4bdb25ea7c212cd1b",
+    ".pipeline/gate.mjs": "a338febbfe0741b68820ea7e0a788ee27686f8e87a0aa295039bd406cc2788a8",
+    ".pipeline/githooks/pre-push": "42c744ac71e02315407d25af80aac6e7830814ee24210b435780566a88ed6613",
+    ".pipeline/lib/config.mjs": "fafff35259d50baeed4705f0185527b8e14a8b9a23051c1fc02b4aacc5a5299b",
+    ".pipeline/lib/contract.mjs": "3f32a38e598c4fbc2dcf5223c6f4baa4c99f3d40f4956dec27f636d0e6e04a05",
+    ".pipeline/lib/gate-core.mjs": "b7dec72cc0f512845ce8ec6189dae282c14fa3375864b92821a58326a19436ab",
+    ".pipeline/lib/git.mjs": "bc01a1427128eeab52d995a7682d2600f11424d9bb177272b8eb34ff15ede008",
+    ".pipeline/lib/github.mjs": "3eb3a4b72da79281621dd1d84ce84bba6eed8896ba9a10ce3bec2be155f37322",
+    ".pipeline/lib/paths.mjs": "a24440cee67e8f2ca7e402bd800de84da1de11d4059a2e6db0f780b3e12a8e5a",
+    ".pipeline/lib/revert.mjs": "27d3fbf3a9bccbdbbdfb4bf492f5939a3fafec8c1445c9bf13a2f93023bcf74e",
+    ".pipeline/lib/tier.mjs": "72d5766a3b66d649944be97383ad398a44da5cd795db97e3039d99b49431782d",
+    ".pipeline/verify.mjs": "ec24558676bc130b31c931061587752df897cbf8bd8a57ecc8f1e340acc6bd02",
+    "AGENTS.md": "c95f657858a7c0aa2c94f240c9c092da775a0cd2bf4211436fb77352ade59874"
+  }
+}

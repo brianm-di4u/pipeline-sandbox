@@ -1,0 +1,75 @@
+{
+  "project": "pipeline-sandbox",
+  "pack": "generic",
+  "admins": [
+    "brianm-di4u"
+  ],
+  "trustedBots": [
+    "dependabot[bot]"
+  ],
+  "verify": {
+    "fast": "TODO: quick checks, such as lint and unit tests",
+    "full": "TODO: everything CI should run",
+    "e2e": "TODO: run the real app and exercise it",
+    "checkNames": [
+      "verify"
+    ]
+  },
+  "tiers": {
+    "t0Paths": [
+      "docs/**/*.md",
+      "README.md",
+      "CHANGELOG.md"
+    ],
+    "t0Exclude": [
+      "docs/decisions/**",
+      "docs/PRD.md",
+      "docs/THREAT-MODEL.md"
+    ],
+    "t2Paths": [
+      ".github/**",
+      ".pipeline/**",
+      "pipeline.config.json",
+      "pipeline.lock.json",
+      ".gitattributes",
+      ".claude/settings*.json",
+      ".claude/hooks/**",
+      ".claude/agents/**",
+      ".claude/workflows/**",
+      "LICENSE*",
+      "THIRD_PARTY*",
+      "docs/PRD.md",
+      "**/auth/**",
+      "**/billing/**",
+      "**/migrations/**",
+      "**/build.rs",
+      ".cargo/**"
+    ],
+    "decisionPaths": [
+      "docs/decisions/**"
+    ],
+    "sizeWarnLines": 800
+  },
+  "merge": {
+    "t0": "auto",
+    "t1": "auto",
+    "t2": "human"
+  },
+  "council": {
+    "maxRounds": 3,
+    "maxRoundsSensitive": 5,
+    "maxNits": 5,
+    "maxSeats": 6,
+    "maxDiffGrowth": 1.5,
+    "externalSeats": []
+  },
+  "breaker": {
+    "window": 20,
+    "maxFailures": 3
+  },
+  "autopilot": {
+    "maxPrsPerDay": 5,
+    "maxConsecutiveFailures": 2
+  },
+  "formatters": {}
+}
