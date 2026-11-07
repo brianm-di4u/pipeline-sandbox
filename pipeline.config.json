@@ -26,25 +26,7 @@
       "docs/PRD.md",
       "docs/THREAT-MODEL.md"
     ],
-    "t2Paths": [
-      ".github/**",
-      ".pipeline/**",
-      "pipeline.config.json",
-      "pipeline.lock.json",
-      ".gitattributes",
-      ".claude/settings*.json",
-      ".claude/hooks/**",
-      ".claude/agents/**",
-      ".claude/workflows/**",
-      "LICENSE*",
-      "THIRD_PARTY*",
-      "docs/PRD.md",
-      "**/auth/**",
-      "**/billing/**",
-      "**/migrations/**",
-      "**/build.rs",
-      ".cargo/**"
-    ],
+    "t2Paths": [],
     "decisionPaths": [
       "docs/decisions/**"
     ],
@@ -53,7 +35,7 @@
   "merge": {
     "t0": "auto",
     "t1": "auto",
-    "t2": "human"
+    "t2": "auto"
   },
   "council": {
     "maxRounds": 3,
