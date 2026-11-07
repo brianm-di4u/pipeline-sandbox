@@ -8,9 +8,9 @@
     "dependabot[bot]"
   ],
   "verify": {
-    "fast": "node --test tests/",
-    "full": "node --test tests/",
-    "e2e": "node --test tests/",
+    "fast": "node --test \"tests/*.test.mjs\"",
+    "full": "node --test \"tests/*.test.mjs\"",
+    "e2e": "node --test \"tests/*.test.mjs\"",
     "checkNames": [
       "verify"
     ]
