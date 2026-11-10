@@ -54,9 +54,14 @@ export function selectSeats({ tier, paths, council = {}, diffLines = 0 }) {
   if (touches(triggers.runtime)) wanted.push('council-reliability-engineer');
   if (touches(triggers.ui)) wanted.push('council-ux-a11y-reviewer');
 
+  // A project's own seats, each called for by the paths it names. They're the last
+  // to drop: a project adds one because no generic seat can do its job.
+  const extras = (council.extraSeats ?? []).filter((seat) => touches(seat.paths)).map((seat) => seat.agent);
+  wanted.push(...extras);
+
   const limit = council.maxSeats ?? 6;
   const dropped = [];
-  for (const seat of DROP_ORDER) {
+  for (const seat of [...DROP_ORDER, ...extras]) {
     if (wanted.length <= limit) break;
     const index = wanted.indexOf(seat);
     if (index !== -1) {
@@ -65,8 +70,9 @@ export function selectSeats({ tier, paths, council = {}, diffLines = 0 }) {
     }
   }
 
+  const model = tier === 1 ? council.t1Model : null;
   return {
-    seats: wanted.map((agent) => ({ agent })),
+    seats: wanted.map((agent) => (model ? { agent, model } : { agent })),
     panel: tier === 2 ? ['sonnet', 'sonnet', 'opus'] : ['sonnet', 'sonnet'],
     dropped,
   };
@@ -249,6 +255,8 @@ export function buildVerdict({ ledger, tier, hash }) {
     rounds: counted.length,
     open: { blocker: count('blocker'), should: count('should'), nit: ledger.findings.filter((f) => f.severity === 'nit').length },
     ...(ledger.raise ? { raise: ledger.raise } : {}),
+    // Self-reported by `council.mjs plan --worker <model>`, for the digest.
+    ...(ledger.worker ? { worker: { model: ledger.worker } } : {}),
     seats: [...new Set(ledger.rounds.flatMap((r) => r.seats))],
     diff: { first: ledger.rounds[0]?.diffLines ?? 0, final: last.diffLines },
     findings: ledger.findings.map((f) => ({
