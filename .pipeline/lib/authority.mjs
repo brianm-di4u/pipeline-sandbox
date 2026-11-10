@@ -40,6 +40,12 @@ export const sameLogin = (a, b) =>
 
 const isStringList = (value) => Array.isArray(value) && value.every((item) => typeof item === 'string');
 
+// `since`: a delegate's commands count only from this moment on. Anything the
+// account posted before, such as from a browser left signed in as it before it
+// was configured, never counts.
+const SINCE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
+export const validSince = (value) => typeof value === 'string' && SINCE.test(value) && !Number.isNaN(Date.parse(value));
+
 function entryProblem(entry, admins) {
   if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return 'is not an object';
   if (typeof entry.login !== 'string' || !LOGIN.test(entry.login)) return 'has no valid login';
@@ -52,8 +58,14 @@ function entryProblem(entry, admins) {
     const unknown = entry.decide.find((cls) => !DECISION_CLASSES.includes(cls));
     if (unknown !== undefined) return `has an unknown decision class "${unknown}"`;
   }
+  if ('since' in entry && !validSince(entry.since)) return 'has a "since" that is not an ISO date and time';
+  if ('id' in entry && !validUserId(entry.id)) return 'has an "id" that is not a GitHub user id';
   return null;
 }
+
+// `id`: the delegate account's numeric GitHub user id. A login can change hands;
+// the id can't. With it set, only that account's commands count.
+export const validUserId = (value) => Number.isSafeInteger(value) && value > 0;
 
 // Drops what it can't trust rather than throwing: a throw here would fail the gate
 // on every PR. Dropping only ever takes authority away.
@@ -86,6 +98,8 @@ export function cleanDelegates(config, warn = () => {}) {
         decide: [...(entry.decide ?? [])],
         rearm: entry.rearm === true,
         direct: entry.direct === true,
+        since: entry.since ?? null,
+        id: entry.id ?? null,
       });
     }
   });
@@ -103,6 +117,10 @@ export function authority(config) {
     adminOnlyPaths,
     isAdmin: (login) => admins.includes(login),
     delegateOf: (login) => delegates.find((grant) => sameLogin(grant.login, login)) ?? null,
+    // For what restricts a delegate, such as a push or an edit: by login, or by id
+    // when the grant has one, so a renamed account is still caught.
+    delegateOfUser: (user) =>
+      delegates.find((grant) => sameLogin(grant.login, user?.login) || (grant.id !== null && grant.id === user?.id)) ?? null,
   };
 }
 

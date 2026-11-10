@@ -138,9 +138,36 @@ export function delegateBarriers(auth, login, ctx = {}) {
   return reasons;
 }
 
+// A login is only as durable as the account behind it. So a delegate's command,
+// or an issue it opens, counts only when GitHub itself says on it that the author
+// has access to the repository, and, with an `id` in the grant, only from that
+// exact account. A missing field fails.
+export const ACCESS = ['COLLABORATOR', 'MEMBER', 'OWNER'];
+
+export function identityProblems(item, grant) {
+  const reasons = [];
+  const association = item?.author_association;
+  if (!ACCESS.includes(association)) {
+    reasons.push(`GitHub doesn't show ${grant.login} with access to this repository on it (${association ?? 'no association given'})`);
+  }
+  if (grant.id !== null && grant.id !== undefined && item?.user?.id !== grant.id) {
+    reasons.push(`it came from account ${item?.user?.id ?? 'unknown'}, not ${grant.login}'s configured id ${grant.id}`);
+  }
+  return reasons;
+}
+
+// A command posted before the grant's `since` never counts.
+function beforeGrant(grant, comment) {
+  return grant?.since ? time(comment.created_at) < time(grant.since) : false;
+}
+const BEFORE_GRANT = (grant) => `it was posted before ${grant.login}'s grant began, at ${grant.since}`;
+
 function delegateProblems(comment, who, ctx) {
   const reasons = delegateBarriers(who, comment.user.login, ctx);
   if (inWindow(comment.created_at, ctx.suspensions)) reasons.push('it was posted while delegates were suspended');
+  const grant = who.delegateOf(comment.user.login);
+  if (grant) reasons.push(...identityProblems(comment, grant));
+  if (beforeGrant(grant, comment)) reasons.push(BEFORE_GRANT(grant));
   return reasons;
 }
 
@@ -227,7 +254,8 @@ export function decisionProblems(comment, auth, comments, ctx = {}) {
   const grant = who.delegateOf(comment.user?.login);
   if (!grant) return [`${comment.user?.login} is not a delegate`];
   const recorded = recordedClass(comments, ctx.events);
-  const reasons = [];
+  const reasons = [...identityProblems(comment, grant)];
+  if (beforeGrant(grant, comment)) reasons.push(BEFORE_GRANT(grant));
   if (ctx.issueAuthor === undefined) reasons.push("the issue's author could not be read");
   else if (!who.isAdmin(ctx.issueAuthor)) reasons.push(`the issue was opened by ${ctx.issueAuthor}, not an admin`);
   if (!Array.isArray(ctx.events)) reasons.push("the issue's label history could not be read");
@@ -291,8 +319,9 @@ export function rearmProblems(comment, auth, comments, ctx = {}) {
   const who = toAuthority(auth);
   const grant = who.delegateOf(comment.user?.login);
   if (!grant) return [`${comment.user?.login} is not a delegate`];
-  const reasons = [];
+  const reasons = [...identityProblems(comment, grant)];
   if (!grant.rearm) reasons.push(`${grant.login} has no rearm grant`);
+  if (beforeGrant(grant, comment)) reasons.push(BEFORE_GRANT(grant));
   const ok = rearmGrant(comments);
   if (!ok) reasons.push('the bot did not offer a delegate re-arm for this trip, so only an admin can re-arm it');
   else if (!(time(ok.created_at) < time(comment.created_at))) reasons.push('it was posted before the bot offered a delegate re-arm');
