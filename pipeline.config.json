@@ -84,5 +84,13 @@
     "maxPrsPerDay": 5,
     "maxConsecutiveFailures": 2
   },
-  "formatters": {}
+  "formatters": {},
+  "freshness": {
+    "mode": "overlap",
+    "groups": {
+      "e2e": [
+        "e2e-group/**"
+      ]
+    }
+  }
 }
