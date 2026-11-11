@@ -9,7 +9,7 @@ A disposable repository for testing [dev-pipeline](https://github.com/brianm-di4
 - `docs/`: the template's planning docs, mostly unfilled on purpose.
 - `evals/review/`: where planted-bug cases go, for checking that the council finds them.
 
-Expect odd branches and PRs, such as `e2e/freshness-*`. Those are end-to-end tests of the gate, opened and closed by the pipeline itself.
+Expect odd branches and PRs, such as `e2e/freshness-*`. Those are end-to-end tests of the gate, run by the pipeline itself. Some of them merge, so main's history has `Freshness e2e: ...` commits that add throwaway files and later remove them.
 
 ## Running the checks
 
